@@ -30,8 +30,8 @@ export default function RootLayout({
 }>) {
   return (
     <ClerkProvider>
-      <html lang="en">
-        {/* <html lang="en" suppressHydrationWarning> */}
+      <html lang="en" suppressHydrationWarning>
+        {/* <html lang="en"> */}
         {/* className={`${geistSans.variable} ${geistMono.variable} antialiased`} */}
         <body className={`${manrope.className} bg-[#171717] `}>
           <ThemeProvider

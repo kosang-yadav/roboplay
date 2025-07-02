@@ -1,0 +1,107 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id            String         @unique @default(uuid())
+  clerkid       String         @unique
+  fullname      String
+  email         String         @unique
+  image         String?
+  trial         Boolean        @default(false)
+  // updatedAt DateTime    @updatedAt
+  workspace     WorkSpace[]
+  subscription  Subscription?
+  videos        Video[]
+  members       Member[]
+  notifications Notification[]
+  // sender        Invite[]
+  // receiver      Invite[]
+  createdAt     DateTime       @default(now())
+}
+
+model WorkSpace {
+  id        String   @unique @default(uuid())
+  name      String
+  type      Type
+  videos    Video[]
+  folders   Folder[]
+  members   Member[]
+  // invite    Invite[]
+  User      User?    @relation(fields: [userId], references: [id])
+  userId    String?
+  createdAt DateTime @default(now())
+}
+
+model Subscription {
+  id         String            @unique @default(uuid())
+  customerId String            @unique
+  plan       SUBSCRIPTION_PLAN @default(FREE)
+  User       User?             @relation(fields: [userId], references: [id])
+  userId     String?           @unique
+  createdAt  DateTime          @default(now())
+  updatedAt  DateTime          @default(now())
+}
+
+model Video {
+  id          String     @unique @default(uuid())
+  title       String?    @default("untitled video")
+  description String?    @default("no description")
+  processing  Boolean    @default(true)
+  source      String     @unique
+  User        User?      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId      String?
+  WorkSpace   WorkSpace? @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+  workspaceId String?
+  Folder      Folder?    @relation(fields: [folderId], references: [id], onDelete: Cascade)
+  folderId    String?
+  createdAt   DateTime   @default(now())
+}
+
+model Folder {
+  id          String     @unique @default(uuid())
+  name        String?    @default("untitled folder")
+  videos      Video[]
+  WorkSpace   WorkSpace? @relation(fields: [workspaceId], references: [id])
+  workspaceId String?
+  createdAt   DateTime   @default(now())
+}
+
+model Member {
+  id          String     @unique @default(uuid())
+  member      Boolean    @default(true)
+  User        User?      @relation(fields: [userId], references: [id])
+  userId      String?
+  WorkSpace   WorkSpace? @relation(fields: [workspaceId], references: [id])
+  workspaceId String?
+  createdAt   DateTime   @default(now())
+}
+
+model Notification {
+  id      String  @unique @default(uuid())
+  content String
+  User    User?   @relation(fields: [userId], references: [id])
+  userId  String?
+}
+
+enum Type {
+  PUBLIC
+  PRIVATE
+}
+
+enum SUBSCRIPTION_PLAN {
+  FREE
+  PRO
+}
