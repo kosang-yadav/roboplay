@@ -7,7 +7,9 @@ export const authenticateUser = async () => {
   try {
     const user = await currentUser();
 
-    if (!user) return { status: 403 };
+    // console.log(user);
+
+    if (!user) return { status: 404 };
 
     const userExists = await client.user.findUnique({
       where: {
@@ -33,12 +35,17 @@ export const authenticateUser = async () => {
         email: user.emailAddresses[0].emailAddress,
         image: user.imageUrl,
         subscription: {
-          create: {},
+          create: {
+            customerId: user.id,
+          },
         },
         workspace: {
           create: {
-            name: user.firstName + "'s WorkSpace",
-            type: "PERSONAL",
+            name: user.firstName
+              ? user.firstName + "'s WorkSpace"
+              : user.emailAddresses[0].emailAddress.split("@")[0] +
+                "'s WorkSpace",
+            type: "PRIVATE",
           },
         },
       },
@@ -58,7 +65,7 @@ export const authenticateUser = async () => {
       },
     });
 
-    if (newUser) return { status: 200, user: newUser };
+    if (newUser) return { status: 201, user: newUser };
 
     return { status: 400 };
   } catch (error) {

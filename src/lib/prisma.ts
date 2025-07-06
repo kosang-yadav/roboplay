@@ -1,4 +1,4 @@
-import { PrismaClient } from "@prisma/client";
+import { PrismaClient } from "../generated/prisma";
 
 // Add prisma to the global object to prevent multiple instantiations of PrismaClient
 // in development mode (e.g., when Next.js HMR reloads modules).

@@ -14,7 +14,7 @@ export default function LandingPageNavbar() {
         <h1 className="text-2xl font-semibold font-mono">roboPlay</h1>
       </div>
       <div className="hidden items-center gap-x-10 text-xl lg:flex text-white">
-        <Link href="/">Home</Link>
+        <Link href="/dashboard">Home</Link>
         <Link href="/">Pricing</Link>
         <Link href="/">About</Link>
       </div>

@@ -35,7 +35,7 @@ model User {
 model WorkSpace {
   id        String   @unique @default(uuid())
   name      String
-  type      Type
+  type      Type     @default(PUBLIC)
   videos    Video[]
   folders   Folder[]
   members   Member[]

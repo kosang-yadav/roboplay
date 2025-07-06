@@ -1,5 +1,5 @@
 const dashboard = () => {
-  return <div>baka</div>;
+  return <div className="text-white">baka</div>;
 };
 
 export default dashboard;
